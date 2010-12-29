@@ -1,19 +1,13 @@
 %define rel 1
-%define distsuffix edm
 
 %{?dist: %{expand: %%define %dist 1}}
 
 Summary: Tools for setup and control VPN via PPTP/L2TP
-Summary(ru): Инструмент для установки и управления соединением VPN через PPTP/L2TP
-Summary(uk): Інструмент для встановлення та керування з'єднанням VPN через PPTP/L2TP
 Name: vpnpptp-allde
 Version: 0.2.8
 Release: %mkrel %{rel}
-License: GPL2
-Group: Network
-
-Packager: Alex Loginov <loginov_alex@inbox.ru>, <loginov.alex.valer@gmail.com>
-Vendor: Mandriva Russia, http://www.mandriva.ru
+License: GPL2+
+Group: System/Configuration/Networking
 
 Source0: vpnpptp-%{distsuffix}-src-%{version}.tar.gz
 Source1: vpnpptp_allde.pm
@@ -26,17 +20,10 @@ Obsoletes: vpnpptp-kde-one < 0.0.6
 
 %description
 Tools for easy and quick setup and control VPN via PPTP/L2TP
-%description -l ru
-Инструмент для легкого и быстрого подключения и управления соединением VPN через PPTP/L2TP
-%description -l uk
-Інструмент для легкого і швидкого підключення і керування з'єднанням VPN через PPTP/L2TP
 
 %prep
 
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT
-
-%setup -n vpnpptp-%{distsuffix}-src-%{version}
+%setup -nq vpnpptp-%{distsuffix}-src-%{version}
 
 
 %postun
@@ -59,14 +46,11 @@ cp -f /opt/vpnpptp/vpnpptp.png %{_datadir}/pixmaps/vpnpptp.png
 chmod 0644 %{_datadir}/pixmaps/ponoff.png
 chmod 0644 %{_datadir}/pixmaps/vpnpptp.png
 
-%pre
-
-%preun
-
 %build
 ./mandriva.compile.sh
 
 %install
+rm -rf %{buildroot}
 mkdir $RPM_BUILD_ROOT/opt
 mkdir $RPM_BUILD_ROOT/opt/vpnpptp
 mkdir $RPM_BUILD_ROOT/opt/vpnpptp/scripts
@@ -147,6 +131,7 @@ install -m 0644 vpnpptp.desktop \
 install -pm0644 -D %SOURCE1 %{buildroot}/usr/lib/libDrakX/network/vpn/vpnpptp_allde.pm
 
 %clean
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root, root)
@@ -162,4 +147,3 @@ install -pm0644 -D %SOURCE1 %{buildroot}/usr/lib/libDrakX/network/vpn/vpnpptp_al
 %{_datadir}/applications/ponoff.desktop
 %{_datadir}/applications/vpnpptp.desktop
 /usr/lib/libDrakX/network/vpn/vpnpptp_allde.pm
-

@@ -9,11 +9,23 @@ Release: %mkrel %{rel}
 License: GPL2+
 Group: System/Configuration/Networking
 
-Source0: vpnpptp-%{distsuffix}-src-%{version}.tar.gz
+Source0: vpnpptp-edm-src-%{version}.tar.gz
 Source1: vpnpptp_allde.pm
+%ifarch x86_64
+Patch0: ponoff.patch
+Patch1: vpnpptp.patch
+Patch2: ponoff_project1.patch
+Patch3: vpnpptp_project1.patch
+%endif
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires: fpc-src >= 2.2.4, fpc >= 2.2.4, lazarus
+BuildRequires: fpc-src >= 2.2.4, fpc >= 2.2.4, gdk-pixbuf, gtk+, glibc, gdb, lazarus
+%ifarch i586
+BuildRequires: libglib1.2-devel, libgdk-pixbuf2-devel
+%endif
+%ifarch x86_64
+BuildRequires: lib64glib1.2-devel, lib64gdk-pixbuf2-devel
+%endif
 Requires: gksu, pptp-linux, xl2tpd
 Obsoletes: vpnpptp-allde < 0.0.6
 Obsoletes: vpnpptp-kde-one < 0.0.6
@@ -23,8 +35,13 @@ Tools for easy and quick setup and control VPN via PPTP/L2TP
 
 %prep
 
-%setup -nq vpnpptp-%{distsuffix}-src-%{version}
-
+%setup -n vpnpptp-edm-src-%{version} -q
+%ifarch x86_64
+%patch0 -p0
+%patch1 -p0
+%patch2 -p0
+%patch3 -p0
+%endif
 
 %postun
 if [ -a %{_datadir}/applications/ponoff.desktop.old ]

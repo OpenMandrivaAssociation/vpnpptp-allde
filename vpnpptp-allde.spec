@@ -68,7 +68,7 @@ chmod 0644 %{_datadir}/pixmaps/vpnpptp.png
 
 %install
 rm -rf %{buildroot}
-mkdir $RPM_BUILD_ROOT/opt
+mkdir -p $RPM_BUILD_ROOT/opt
 mkdir $RPM_BUILD_ROOT/opt/vpnpptp
 mkdir $RPM_BUILD_ROOT/opt/vpnpptp/scripts
 mkdir $RPM_BUILD_ROOT/opt/vpnpptp/wiki

@@ -20,12 +20,8 @@ Patch3: vpnpptp_project1.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: fpc-src >= 2.2.4, fpc >= 2.2.4, gdk-pixbuf, gtk+, glibc, gdb, lazarus
-%ifarch i586
-BuildRequires: libglib1.2-devel, libgdk-pixbuf2-devel
-%endif
-%ifarch x86_64
-BuildRequires: lib64glib1.2-devel, lib64gdk-pixbuf2-devel
-%endif
+BuildRequires: glib1.2-devel, gdk-pixbuf2-devel
+
 Requires: gksu, pptp-linux, xl2tpd
 Obsoletes: vpnpptp-allde < 0.0.6
 Obsoletes: vpnpptp-kde-one < 0.0.6
@@ -74,8 +70,8 @@ mkdir $RPM_BUILD_ROOT/opt/vpnpptp/scripts
 mkdir $RPM_BUILD_ROOT/opt/vpnpptp/wiki
 mkdir $RPM_BUILD_ROOT/opt/vpnpptp/lang
 mkdir $RPM_BUILD_ROOT/usr
-mkdir $RPM_BUILD_ROOT/usr/bin
-mkdir $RPM_BUILD_ROOT/usr/share
+mkdir $RPM_BUILD_ROOT/%{_bindir}
+mkdir $RPM_BUILD_ROOT/%{datadir}
 mkdir $RPM_BUILD_ROOT/usr/share/applications
 mkdir $RPM_BUILD_ROOT/usr/share/pixmaps
 mkdir $RPM_BUILD_ROOT/usr/lib

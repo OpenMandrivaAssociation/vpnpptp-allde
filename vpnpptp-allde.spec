@@ -1,92 +1,65 @@
 %define rel 1
 
-%{?dist: %{expand: %%define %dist 1}}
-
 Summary: Tools for setup and control VPN via PPTP/L2TP
 Name: vpnpptp-allde
-Version: 0.2.8
+Version: 0.2.9
 Release: %mkrel %{rel}
-License: GPL2+
+License: GPL2
 Group: System/Configuration/Networking
 
-Source0: vpnpptp-edm-src-%{version}.tar.gz
+Source0: vpnpptp-src-%{version}.tar.gz
 Source1: vpnpptp_allde.pm
-%ifarch x86_64
-Patch0: ponoff.patch
-Patch1: vpnpptp.patch
-Patch2: ponoff_project1.patch
-Patch3: vpnpptp_project1.patch
-%endif
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires: fpc-src >= 2.2.4, fpc >= 2.2.4, gdk-pixbuf, gtk+, glibc, gdb, lazarus
-BuildRequires: glib1.2-devel, gdk-pixbuf2-devel
-
+BuildRequires: fpc-src >= 2.2.4, fpc >= 2.2.4, lazarus
 Requires: gksu, pptp-linux, xl2tpd
-Obsoletes: vpnpptp-allde < 0.0.6
-Obsoletes: vpnpptp-kde-one < 0.0.6
 
 %description
 Tools for easy and quick setup and control VPN via PPTP/L2TP
 
 %prep
 
-%setup -n vpnpptp-edm-src-%{version} -q
-%ifarch x86_64
-%patch0 -p0
-%patch1 -p0
-%patch2 -p0
-%patch3 -p0
-%endif
+%setup -q -n vpnpptp-src-%{version}
 
-%postun
-if [ -a %{_datadir}/applications/ponoff.desktop.old ]
-then
-	rm -f %{_datadir}/applications/ponoff.desktop.old
-fi
-if [ -a %{_datadir}/applications/vpnpptp.desktop.old ]
-then
-	rm -f %{_datadir}/applications/vpnpptp.desktop.old
-fi
-
-%post
-ln -s /opt/vpnpptp/ponoff /usr/bin/ponoff
-ln -s /opt/vpnpptp/vpnpptp /usr/bin/vpnpptp
+%pre
+#удалить ссылки если есть
+rm -f /usr/bin/vpnpptp
+rm -f /usr/bin/ponoff
 rm -f %{_datadir}/pixmaps/ponoff.png
 rm -f %{_datadir}/pixmaps/vpnpptp.png
-cp -f /opt/vpnpptp/ponoff.png %{_datadir}/pixmaps/ponoff.png
-cp -f /opt/vpnpptp/vpnpptp.png %{_datadir}/pixmaps/vpnpptp.png
-chmod 0644 %{_datadir}/pixmaps/ponoff.png
-chmod 0644 %{_datadir}/pixmaps/vpnpptp.png
+#обеспечить переход с allde на kde-one или наоборот
+rm -f %{_datadir}/applications/ponoff.desktop.old
+rm -f %{_datadir}/applications/vpnpptp.desktop.old
 
 %build
-./mandriva.compile.sh
+%ifarch x86_64
+./mandriva.compile.sh x86_64 lib64
+%else
+./mandriva.compile.sh i386 lib
+%endif
 
 %install
 rm -rf %{buildroot}
-mkdir -p $RPM_BUILD_ROOT/opt
-mkdir $RPM_BUILD_ROOT/opt/vpnpptp
-mkdir $RPM_BUILD_ROOT/opt/vpnpptp/scripts
-mkdir $RPM_BUILD_ROOT/opt/vpnpptp/wiki
-mkdir $RPM_BUILD_ROOT/opt/vpnpptp/lang
-mkdir $RPM_BUILD_ROOT/usr
-mkdir $RPM_BUILD_ROOT/%{_bindir}
-mkdir $RPM_BUILD_ROOT/%{datadir}
-mkdir $RPM_BUILD_ROOT/usr/share/applications
-mkdir $RPM_BUILD_ROOT/usr/share/pixmaps
-mkdir $RPM_BUILD_ROOT/usr/lib
-mkdir $RPM_BUILD_ROOT/usr/lib/libDrakX
-mkdir $RPM_BUILD_ROOT/usr/lib/libDrakX/network
-mkdir $RPM_BUILD_ROOT/usr/lib/libDrakX/network/connection
+mkdir -p %{buildroot}%{_datadir}/vpnpptp
+mkdir -p %{buildroot}%{_datadir}/vpnpptp/scripts
+mkdir -p %{buildroot}%{_datadir}/vpnpptp/wiki
+mkdir -p %{buildroot}%{_datadir}/vpnpptp/lang
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_datadir}/applications
+mkdir -p %{buildroot}%{_datadir}/pixmaps
+mkdir -p %{buildroot}%{_libdir}/libDrakX/network/connection
 
-cp -f ./vpnpptp/vpnpptp $RPM_BUILD_ROOT/opt/vpnpptp/
-cp -f ./ponoff/ponoff $RPM_BUILD_ROOT/opt/vpnpptp/
-cp -f ./ponoff.png $RPM_BUILD_ROOT/opt/vpnpptp/
-cp -f ./vpnpptp.png $RPM_BUILD_ROOT/opt/vpnpptp/
-cp -f ./*.ico $RPM_BUILD_ROOT/opt/vpnpptp
-cp -rf ./scripts $RPM_BUILD_ROOT/opt/vpnpptp/
-cp -rf ./wiki $RPM_BUILD_ROOT/opt/vpnpptp/
-cp -rf ./lang $RPM_BUILD_ROOT/opt/vpnpptp/
+cp -f ./vpnpptp/vpnpptp %{buildroot}%{_bindir}
+cp -f ./ponoff/ponoff %{buildroot}%{_bindir}
+cp -f ./ponoff.png %{buildroot}%{_datadir}/pixmaps/
+cp -f ./vpnpptp.png %{buildroot}%{_datadir}/pixmaps/
+chmod 0644 %{buildroot}%{_datadir}/pixmaps/ponoff.png
+chmod 0644 %{buildroot}%{_datadir}/pixmaps/vpnpptp.png
+cp -f ./*.ico %{buildroot}%{_datadir}/vpnpptp
+cp -f ./*.png %{buildroot}%{_datadir}/vpnpptp
+cp -rf ./scripts %{buildroot}%{_datadir}/vpnpptp/
+cp -rf ./wiki %{buildroot}%{_datadir}/vpnpptp/
+cp -rf ./lang %{buildroot}%{_datadir}/vpnpptp/
 
 install -dm 755 %{buildroot}%{_datadir}/applications
 cat > ponoff.desktop << EOF
@@ -100,7 +73,7 @@ GenericName[uk]=Керування з'єднанням VPN PPTP/L2TP
 Name=ponoff
 Name[ru]=ponoff
 Name[uk]=ponoff
-Exec=gksu -u root -l /opt/vpnpptp/ponoff
+Exec=gksu -u root -l /usr/bin/ponoff
 Comment=Control VPN via PPTP/L2TP
 Comment[ru]=Управление соединением VPN через PPTP/L2TP
 Comment[uk]=Керування з'єднанням VPN через PPTP/L2TP
@@ -127,7 +100,7 @@ GenericName[uk]=Налаштування з’єднання VPN PPTP/L2TP
 Name=vpnpptp
 Name[ru]=vpnpptp
 Name[uk]=vpnpptp
-Exec=gksu -u root -l /opt/vpnpptp/vpnpptp
+Exec=gksu -u root -l /usr/bin/vpnpptp
 Comment=Setup VPN via PPTP/L2TP
 Comment[ru]=Настройка соединения VPN PPTP/L2TP
 Comment[uk]=Налаштування з’єднання VPN PPTP/L2TP
@@ -149,14 +122,17 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root, root)
 
-/opt/vpnpptp/vpnpptp
-/opt/vpnpptp/ponoff
-/opt/vpnpptp/lang
-/opt/vpnpptp/ponoff.png
-/opt/vpnpptp/vpnpptp.png
-/opt/vpnpptp/*.ico
-/opt/vpnpptp/scripts
-/opt/vpnpptp/wiki
+%{_bindir}/vpnpptp
+%{_bindir}/ponoff
+%{_datadir}/vpnpptp/lang
+%{_datadir}/pixmaps/ponoff.png
+%{_datadir}/pixmaps/vpnpptp.png
+%{_datadir}/vpnpptp/*.ico
+%{_datadir}/vpnpptp/*.png
+%{_datadir}/vpnpptp/scripts
+%{_datadir}/vpnpptp/wiki
 %{_datadir}/applications/ponoff.desktop
 %{_datadir}/applications/vpnpptp.desktop
 /usr/lib/libDrakX/network/vpn/vpnpptp_allde.pm
+
+%changelog

@@ -9,7 +9,6 @@ Group: System/Configuration/Networking
 
 Source0: vpnpptp-src-%{version}.tar.gz
 Source1: vpnpptp_allde.pm
-Patch0:  mymessage.compiled.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: fpc-src >= 2.2.4, fpc >= 2.2.4, lazarus
@@ -21,7 +20,6 @@ Tools for easy and quick setup and control VPN via PPTP/L2TP
 %prep
 
 %setup -q -n vpnpptp-src-%{version}
-%patch0 -p0
 
 %pre
 #удалить ссылки если есть

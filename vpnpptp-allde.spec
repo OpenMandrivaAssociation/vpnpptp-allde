@@ -2,7 +2,7 @@
 
 Summary: Tools for setup and control VPN via PPTP/L2TP
 Name: vpnpptp-allde
-Version: 0.2.9
+Version: 0.3.0
 Release: %mkrel %{rel}
 License: GPL2
 Group: System/Configuration/Networking

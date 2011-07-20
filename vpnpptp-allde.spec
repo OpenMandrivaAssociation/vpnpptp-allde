@@ -1,21 +1,23 @@
 %define rel 1
 
-Summary: Tools for setup and control VPN via PPTP/L2TP
+Summary: Tools for setup and control VPN via PPTP/L2TP/OpenL2TP
 Name: vpnpptp-allde
-Version: 0.3.1
+Version: 0.3.3
 Release: %mkrel %{rel}
 License: GPL2
 Group: System/Configuration/Networking
+Url: http://code.google.com/p/vpnpptp
 
 Source0: vpnpptp-src-%{version}.tar.gz
-Source1: vpnpptp_allde.pm
+Source1: vpnpptp.pm
+Source2: vpnmandriva.pm
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires: fpc-src >= 2.2.4, fpc >= 2.2.4, lazarus
-Requires: gksu, pptp-linux, xl2tpd
+BuildRequires: fpc-src >= 2.4.2, fpc >= 2.4.2, lazarus >= 0.9.29
+Requires: gksu, pptp-linux, xl2tpd >= 1.2.7, openl2tp
 
 %description
-Tools for easy and quick setup and control VPN via PPTP/L2TP
+Tools for easy and quick setup and control VPN via PPTP/L2TP/OpenL2TP
 
 %prep
 
@@ -51,12 +53,12 @@ mkdir -p %{buildroot}%/lib/libDrakX/network/connection
 
 cp -f ./vpnpptp/vpnpptp %{buildroot}%{_bindir}
 cp -f ./ponoff/ponoff %{buildroot}%{_bindir}
+cp -f ./vpnmandriva/vpnmandriva %{buildroot}%{_bindir}
 cp -f ./ponoff.png %{buildroot}%{_datadir}/pixmaps/
 cp -f ./vpnpptp.png %{buildroot}%{_datadir}/pixmaps/
 chmod 0644 %{buildroot}%{_datadir}/pixmaps/ponoff.png
 chmod 0644 %{buildroot}%{_datadir}/pixmaps/vpnpptp.png
 cp -f ./*.ico %{buildroot}%{_datadir}/vpnpptp
-cp -f ./*.png %{buildroot}%{_datadir}/vpnpptp
 cp -rf ./scripts %{buildroot}%{_datadir}/vpnpptp/
 cp -rf ./wiki %{buildroot}%{_datadir}/vpnpptp/
 cp -rf ./lang %{buildroot}%{_datadir}/vpnpptp/
@@ -67,16 +69,16 @@ cat > ponoff.desktop << EOF
 
 [Desktop Entry]
 Encoding=UTF-8
-GenericName=VPN PPTP/L2TP Control
-GenericName[ru]=Управление соединением VPN PPTP/L2TP
-GenericName[uk]=Керування з'єднанням VPN PPTP/L2TP
+GenericName=VPN PPTP/L2TP/OpenL2TP Control
+GenericName[ru]=Управление соединением VPN PPTP/L2TP/OpenL2TP
+GenericName[uk]=Керування з'єднанням VPN PPTP/L2TP/OpenL2TP
 Name=ponoff
 Name[ru]=ponoff
 Name[uk]=ponoff
 Exec=gksu -u root -l /usr/bin/ponoff
-Comment=Control VPN via PPTP/L2TP
-Comment[ru]=Управление соединением VPN через PPTP/L2TP
-Comment[uk]=Керування з'єднанням VPN через PPTP/L2TP
+Comment=Control VPN via PPTP/L2TP/OpenL2TP
+Comment[ru]=Управление соединением VPN через PPTP/L2TP/OpenL2TP
+Comment[uk]=Керування з'єднанням VPN через PPTP/L2TP/OpenL2TP
 Icon=/usr/share/pixmaps/ponoff.png
 Type=Application
 Categories=GTK;System;Network;Monitor;X-MandrivaLinux-CrossDesktop;
@@ -94,16 +96,16 @@ cat > vpnpptp.desktop << EOF
 
 [Desktop Entry]
 Encoding=UTF-8
-GenericName=VPN PPTP/L2TP Setup
-GenericName[ru]=Настройка соединения VPN PPTP/L2TP
-GenericName[uk]=Налаштування з’єднання VPN PPTP/L2TP
+GenericName=VPN PPTP/L2TP/OpenL2TP Setup
+GenericName[ru]=Настройка соединения VPN PPTP/L2TP/OpenL2TP
+GenericName[uk]=Налаштування з’єднання VPN PPTP/L2TP/OpenL2TP
 Name=vpnpptp
 Name[ru]=vpnpptp
 Name[uk]=vpnpptp
 Exec=gksu -u root -l /usr/bin/vpnpptp
-Comment=Setup VPN via PPTP/L2TP
-Comment[ru]=Настройка соединения VPN PPTP/L2TP
-Comment[uk]=Налаштування з’єднання VPN PPTP/L2TP
+Comment=Setup VPN via PPTP/L2TP/OpenL2TP
+Comment[ru]=Настройка соединения VPN PPTP/L2TP/OpenL2TP
+Comment[uk]=Налаштування з’єднання VPN PPTP/L2TP/OpenL2TP
 Icon=/usr/share/pixmaps/vpnpptp.png
 Type=Application
 Categories=GTK;System;Network;Monitor;X-MandrivaLinux-CrossDesktop;
@@ -114,7 +116,8 @@ EOF
 install -m 0644 vpnpptp.desktop \
 %{buildroot}%{_datadir}/applications/vpnpptp.desktop
 
-install -pm0644 -D %SOURCE1 %{buildroot}/usr/lib/libDrakX/network/vpn/vpnpptp_allde.pm
+install -pm0644 -D %SOURCE1 %{buildroot}/usr/lib/libDrakX/network/vpn/vpnpptp.pm
+install -pm0644 -D %SOURCE2 %{buildroot}/usr/lib/libDrakX/network/vpn/vpnmandriva.pm
 
 %clean
 rm -rf %{buildroot}
@@ -124,15 +127,14 @@ rm -rf %{buildroot}
 
 %{_bindir}/vpnpptp
 %{_bindir}/ponoff
+%{_bindir}/vpnmandriva
 %{_datadir}/vpnpptp/lang
 %{_datadir}/pixmaps/ponoff.png
 %{_datadir}/pixmaps/vpnpptp.png
 %{_datadir}/vpnpptp/*.ico
-%{_datadir}/vpnpptp/*.png
 %{_datadir}/vpnpptp/scripts
 %{_datadir}/vpnpptp/wiki
 %{_datadir}/applications/ponoff.desktop
 %{_datadir}/applications/vpnpptp.desktop
-/usr/lib/libDrakX/network/vpn/vpnpptp_allde.pm
-
-%changelog
+/usr/lib/libDrakX/network/vpn/vpnpptp.pm
+/usr/lib/libDrakX/network/vpn/vpnmandriva.pm

@@ -4,7 +4,7 @@
 Summary:	Tools for setup and control VPN via PPTP/L2TP/OpenL2TP
 Name:		vpnpptp-allde
 Version:	0.3.4
-Release:	3
+Release:	4
 License:	GPL2
 Group:		System/Configuration/Networking
 Url:		http://code.google.com/p/vpnpptp
@@ -18,7 +18,7 @@ BuildRequires: fpc-src >= 2.4.2, fpc >= 2.4.2, lazarus >= 0.9.29
 Requires: gksu, pptp-linux, xl2tpd >= 1.2.7, openl2tp
 
 %description
-Tools for easy and quick setup and control VPN via PPTP/L2TP/OpenL2TP
+Tools for easy and quick setup and control VPN via PPTP/L2TP/OpenL2TP.
 
 %prep
 
@@ -43,7 +43,6 @@ rm -f %{_datadir}/applications/vpnpptp.desktop.old
 %endif
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/vpnpptp
 mkdir -p %{buildroot}%{_datadir}/vpnpptp/scripts
 mkdir -p %{buildroot}%{_datadir}/vpnpptp/wiki
@@ -137,25 +136,4 @@ install -pm0644 -D %SOURCE2 %{buildroot}/usr/lib/libDrakX/network/vpn/vpnmandriv
 %{_datadir}/applications/vpnpptp.desktop
 /usr/lib/libDrakX/network/vpn/vpnpptp.pm
 /usr/lib/libDrakX/network/vpn/vpnmandriva.pm
-
-%changelog
-* Wed Jul 20 2011 Александр Казанцев <kazancas@mandriva.org> 0.3.3-1mdv2011.0
-+ Revision: 690732
-- new version 0.3.3
-
-* Thu Jun 02 2011 Александр Казанцев <kazancas@mandriva.org> 0.3.1-1
-+ Revision: 682473
-- new release 0.3.1
-
-* Wed May 04 2011 Александр Казанцев <kazancas@mandriva.org> 0.3.0-1
-+ Revision: 665865
-- version 0.3.0
-- update to version 0.3.0
-
-* Fri Jan 28 2011 Александр Казанцев <kazancas@mandriva.org> 0.2.9-1
-+ Revision: 633543
-- new version 0.2.9
--initial release
-- import vpnpptp-allde
-
 

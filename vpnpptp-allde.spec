@@ -14,7 +14,7 @@ Source1:	vpnpptp.pm
 Source2:	vpnmandriva.pm
 Patch0:		vpnpptp.lazlogger.patch
 
-BuildRequires: fpc-src >= 2.4.2, fpc >= 2.4.2, lazarus >= 0.9.29
+BuildRequires: fpc-src >= 2.4.2, fpc >= 2.4.2, lazarus >= 1.0.14
 Requires: gksu, pptp-linux, xl2tpd >= 1.2.7, openl2tp
 
 %description

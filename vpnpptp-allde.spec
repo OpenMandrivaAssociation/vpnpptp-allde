@@ -3,13 +3,13 @@
 
 Summary:	Tools for setup and control VPN via PPTP/L2TP/OpenL2TP
 Name:		vpnpptp-allde
-Version:	0.3.8
-Release:	7
+Version:	0.3.9
+Release:	1
 License:	GPL2+
 Group:		System/Configuration/Networking
-Url:		http://code.google.com/p/vpnpptp
+Url:		https://sourceforge.net/projects/vpnpptp/files/
 
-Source0:	vpnpptp-src-%{version}.tar.gz
+Source0:	https://downloads.sourceforge.net/project/vpnpptp/vpnpptp-src-%{version}.tar.gz
 Source1:	vpnpptp.pm
 Source2:	vpnmandriva.pm
 Patch1:		oxygen-gtk.patch

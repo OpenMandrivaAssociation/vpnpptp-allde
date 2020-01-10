@@ -29,7 +29,7 @@ Tools for easy and quick setup and control VPN via PPTP/L2TP/OpenL2TP.
 
 %prep
 %setup -q -n vpnpptp-src-%{version}
-%apply_patches
+%autopatch -p1
 
 %build
 ./compile.sh
